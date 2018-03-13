@@ -6,6 +6,13 @@ var autoprefixer = require('autoprefixer');
 module.exports = {
 
   entry: './src/index',
+  externals: {
+    // Use external version
+    "d": "reshape",
+    "e": "reshape-expressions",
+    "f": "reshape-includes"
+
+  },
   output: {
     path: 'build',
     filename: 'bundle.js',
@@ -16,7 +23,15 @@ module.exports = {
       {
         test: /\.js/,
         loader: 'babel',
-        include: __dirname + '/src'
+        include: __dirname + '/src',
+        query: {
+          presets: ['es2015']
+        }
+      },
+      {
+        test: /\.html/,
+        loader: 'html',
+        include: __dirname + '/src',
       },
       {
         test: /\.css/,
@@ -34,13 +49,19 @@ module.exports = {
         test: /\.(ico|otf|pdf)/,
         loader: 'file-loader?name=[name].[ext]',
         include: __dirname + '/src/'
-      }
+      },
+      {test: /\.json$/, loader: "json"},
+
     ],
   },
-  postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ],
+  postcss: [autoprefixer({browsers: ['last 2 versions']})],
   plugins: [
     new ExtractTextPlugin("styles.css"),
-    new StaticSiteGeneratorPlugin(),
-    new webpack.DefinePlugin({ 'process.env': { 'NODE_ENV': JSON.stringify('production') } })
+    new StaticSiteGeneratorPlugin({
+      paths: [
+        '/',
+        '/landing/'
+      ]}),
+    new webpack.DefinePlugin({'process.env': {'NODE_ENV': JSON.stringify('production')}}),
   ]
 };

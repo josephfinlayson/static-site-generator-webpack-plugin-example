@@ -28,6 +28,15 @@ module.exports = {
         ),
         include: __dirname + '/src'
       },
+      // {
+      //   test: /\.css/,
+      //   use: [
+      //     { loader: "style-loader" },
+      //     { loader: "css-loader" }
+      //   ],
+      //   // loader: 'style!css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss',
+      //   include: __dirname + '/src'
+      // },
       {
         test: /\.(jpg|png)/,
         loader: 'file-loader?name=assets/img-[hash:6].[ext]',
@@ -37,12 +46,17 @@ module.exports = {
         test: /\.(ico|otf|pdf)/,
         loader: 'file-loader?name=[name].[ext]',
         include: __dirname + '/src/'
-      }
+      },
+      {test: /\.json$/, loader: "json"},
     ],
   },
-  postcss: [ autoprefixer({ browsers: ['last 2 versions'] }) ],
+  postcss: [autoprefixer({browsers: ['last 2 versions']})],
   plugins: [
     new ExtractTextPlugin("styles.css"),
-    new StaticSiteGeneratorPlugin()
+    new StaticSiteGeneratorPlugin({
+      paths: [
+        '/',
+        '/landing/'
+      ]})
   ]
 };
